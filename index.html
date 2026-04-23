@@ -120,8 +120,10 @@
     .day-cb { display: flex; flex-direction: column; align-items: center; gap: 1px; }
     .day-cb span { font-size: 10px; color: #777; }
     .day-cb input { margin: 0; cursor: pointer; }
-    .any-cb { display: flex; flex-direction: column; align-items: center; gap: 1px; margin-right: 4px; }
-    .any-cb span { font-size: 10px; color: #888; font-style: italic; }
+    .any-cb { display: flex; align-items: center; gap: 5px; margin-right: 8px; padding: 3px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fafafa; cursor: pointer; }
+    .any-cb:has(input:checked) { background: #fff8e1; border-color: #f0a500; }
+    .any-cb span { font-size: 12px; color: #555; white-space: nowrap; }
+    .any-cb input { cursor: pointer; }
 
     /* ── Generate row ── */
     .generate-row { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 14px; }
@@ -365,10 +367,10 @@ function renderChores() {
       <td><input type="number" value="${c.instances_per_week}" min="1" max="14" onchange="upC(${c.id},'instances_per_week',+this.value)"></td>
       <td>
         <div class="days-cbs">
-          <div class="any-cb">
+          <label class="any-cb">
             <input type="checkbox" ${c.as_needed?'checked':''} onchange="upC(${c.id},'as_needed',this.checked);toggleDays(${c.id})">
-            <span>Any</span>
-          </div>
+            <span>As needed</span>
+          </label>
           ${DAYS.map(d=>`
             <div class="day-cb" id="dc-${c.id}-${d}">
               <input type="checkbox" ${c.days.includes(d)?'checked':''} ${c.as_needed?'disabled':''} onchange="upDays(${c.id})">
