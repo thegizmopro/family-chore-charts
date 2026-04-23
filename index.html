@@ -120,7 +120,7 @@
     .day-cb { display: flex; flex-direction: column; align-items: center; gap: 1px; }
     .day-cb span { font-size: 10px; color: #777; }
     .day-cb input { margin: 0; cursor: pointer; }
-    .any-cb { display: flex; align-items: center; gap: 5px; margin-right: 8px; padding: 3px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fafafa; cursor: pointer; }
+    .any-cb { display: flex; align-items: center; gap: 5px; margin-top: 5px; padding: 3px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fafafa; cursor: pointer; flex-basis: 100%; }
     .any-cb:has(input:checked) { background: #fff8e1; border-color: #f0a500; }
     .any-cb span { font-size: 12px; color: #555; white-space: nowrap; }
     .any-cb input { cursor: pointer; }
@@ -367,15 +367,15 @@ function renderChores() {
       <td><input type="number" value="${c.instances_per_week}" min="1" max="14" onchange="upC(${c.id},'instances_per_week',+this.value)"></td>
       <td>
         <div class="days-cbs">
-          <label class="any-cb">
-            <input type="checkbox" ${c.as_needed?'checked':''} onchange="upC(${c.id},'as_needed',this.checked);toggleDays(${c.id})">
-            <span>As needed</span>
-          </label>
           ${DAYS.map(d=>`
             <div class="day-cb" id="dc-${c.id}-${d}">
               <input type="checkbox" ${c.days.includes(d)?'checked':''} ${c.as_needed?'disabled':''} onchange="upDays(${c.id})">
               <span>${DL[d]}</span>
             </div>`).join('')}
+          <label class="any-cb">
+            <input type="checkbox" ${c.as_needed?'checked':''} onchange="upC(${c.id},'as_needed',this.checked);toggleDays(${c.id})">
+            <span>As needed</span>
+          </label>
         </div>
       </td>
       <td><textarea rows="2" onchange="upC(${c.id},'instructions',this.value)">${esc(c.instructions||'')}</textarea></td>
