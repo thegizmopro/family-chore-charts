@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Family Chore Charts</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+      color: #111;
+      background: #f5f5f5;
+    }
+
+    /* ── Header ── */
+    header {
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 { font-size: 15px; font-weight: 600; flex: 1; }
+
+    /* ── Buttons ── */
+    .btn {
+      padding: 6px 14px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .btn:hover { background: #f0f0f0; }
+    .btn-primary { background: #111; color: #fff; border-color: #111; }
+    .btn-primary:hover { background: #333; }
+    .btn-sm { padding: 4px 10px; font-size: 12px; }
+    .btn-danger { border-color: #d44; color: #d44; }
+    .btn-danger:hover { background: #fff5f5; }
+
+    /* ── Layout ── */
+    .page { max-width: 860px; margin: 0 auto; padding: 20px 16px; }
+
+    /* ── Cards ── */
+    .card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+      margin-bottom: 14px;
+    }
+
+    /* ── Form fields ── */
+    .field-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; align-items: flex-end; }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field label { font-size: 11px; font-weight: 500; color: #666; }
+    .field input, .field select {
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+    .field input:focus, .field select:focus { outline: none; border-color: #666; }
+
+    /* ── Kids ── */
+    .kids-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 8px; }
+    .kid-chip {
+      display: flex; align-items: center; gap: 5px;
+      background: #f0f0f0; border-radius: 20px;
+      padding: 3px 10px 3px 12px; font-size: 13px;
+    }
+    .kid-chip button {
+      background: none; border: none; cursor: pointer;
+      color: #999; font-size: 16px; line-height: 1; padding: 0;
+    }
+    .kid-chip button:hover { color: #d44; }
+    .add-kid-row { display: flex; gap: 8px; align-items: center; }
+    .add-kid-row input {
+      padding: 5px 10px; border: 1px solid #ccc; border-radius: 5px;
+      font-size: 13px; font-family: inherit; width: 160px;
+    }
+
+    /* ── Chore table ── */
+    .chore-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .chore-table th {
+      text-align: left; font-size: 11px; font-weight: 500; color: #666;
+      padding: 5px 8px; border-bottom: 1px solid #e0e0e0; white-space: nowrap;
+    }
+    .chore-table td { padding: 5px 6px; border-bottom: 1px solid #f2f2f2; vertical-align: middle; }
+    .chore-table tr:last-child td { border-bottom: none; }
+    .chore-table input[type="text"], .chore-table input[type="number"] {
+      padding: 4px 7px; border: 1px solid #ddd; border-radius: 4px;
+      font-size: 13px; font-family: inherit;
+    }
+    .chore-table input[type="text"] { width: 100%; }
+    .chore-table input[type="number"] { width: 52px; }
+    .chore-table textarea {
+      padding: 4px 7px; border: 1px solid #ddd; border-radius: 4px;
+      font-size: 12px; font-family: inherit; width: 100%;
+      resize: vertical; min-height: 36px; line-height: 1.4;
+    }
+    .days-cbs { display: flex; gap: 3px; flex-wrap: wrap; align-items: flex-end; }
+    .day-cb { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+    .day-cb span { font-size: 10px; color: #777; }
+    .day-cb input { margin: 0; cursor: pointer; }
+    .any-cb { display: flex; flex-direction: column; align-items: center; gap: 1px; margin-right: 4px; }
+    .any-cb span { font-size: 10px; color: #888; font-style: italic; }
+
+    /* ── Generate row ── */
+    .generate-row { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 14px; }
+    .status-msg { font-size: 12px; color: #888; }
+    .status-msg.err { color: #d44; }
+
+    /* ── Fairness bars ── */
+    .fairness-wrap { margin-bottom: 18px; }
+    .fairness-note { font-size: 12px; color: #888; margin-bottom: 12px; line-height: 1.5; }
+    .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .bar-label { width: 62px; font-size: 13px; font-weight: 600; text-align: right; flex-shrink: 0; }
+    .bar-track { flex: 1; background: #eee; border-radius: 4px; height: 22px; }
+    .bar-fill { height: 22px; border-radius: 4px; background: #111; display: flex; align-items: center; padding: 0 8px; transition: width 0.25s; }
+    .bar-val { font-size: 11px; color: #fff; font-weight: 500; }
+
+    /* ── Rotation table ── */
+    .rotation-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 14px; }
+    .rotation-table th, .rotation-table td {
+      padding: 6px 12px; border: 1px solid #e0e0e0; text-align: center;
+    }
+    .rotation-table th { background: #fafafa; font-size: 11px; font-weight: 500; text-transform: uppercase; }
+    .rotation-table .now { background: #fffbe6; font-weight: 600; }
+
+    /* ── Print charts ── */
+    .print-chart {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .print-chart-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e5e5e5;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .print-chart-header h3 { font-size: 18px; font-weight: 700; }
+    .print-chart-header .meta { font-size: 12px; color: #777; }
+    .chore-rows { width: 100%; border-collapse: collapse; }
+    .chore-rows th {
+      text-align: center; font-size: 11px; font-weight: 500; color: #666;
+      padding: 5px 10px; background: #fafafa; border-bottom: 1px solid #e0e0e0;
+    }
+    .chore-rows th.name-th { text-align: left; }
+    .chore-rows td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+    .chore-rows tr:last-child td { border-bottom: none; }
+    .chore-title { font-size: 13px; font-weight: 600; }
+    .chore-inst { font-size: 11px; color: #555; margin-top: 3px; line-height: 1.45; }
+    .chore-dur { font-size: 11px; color: #aaa; margin-top: 2px; }
+    .cb-cell { text-align: center; }
+    .cb-cell input { width: 16px; height: 16px; cursor: pointer; }
+    .as-needed-text { font-size: 11px; color: #aaa; font-style: italic; }
+
+    /* ── Back button ── */
+    .back-row { text-align: center; margin-top: 8px; padding-bottom: 8px; }
+
+    /* ── Print ── */
+    @media print {
+      header, #setup, .no-print { display: none !important; }
+      #output { display: block !important; }
+      body { background: #fff; font-size: 12px; }
+      .page { padding: 0; max-width: none; }
+      .fairness-card { display: none !important; }
+      .print-chart { border-radius: 0; box-shadow: none; page-break-after: always; border: 1px solid #bbb; margin-bottom: 0; }
+      .print-chart:last-child { page-break-after: avoid; }
+      .back-row { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🧹 Family Chore Charts</h1>
+  <button class="btn btn-sm no-print" onclick="loadSeed()">Load Example</button>
+  <button class="btn btn-sm no-print" onclick="triggerImport()">Import JSON</button>
+  <button class="btn btn-sm no-print" onclick="exportJSON()">Export JSON</button>
+  <button class="btn btn-sm no-print" id="shareBtn" onclick="shareURL()">Share URL</button>
+  <button class="btn btn-sm no-print" onclick="window.print()">🖨 Print</button>
+</header>
+
+<div class="page">
+
+  <!-- ── Setup ── -->
+  <div id="setup">
+
+    <div class="card">
+      <div class="card-title">Family</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Family Name</label>
+          <input type="text" id="fName" placeholder="The Smiths" oninput="dirty()">
+        </div>
+        <div class="field">
+          <label>Weeks per assignment</label>
+          <select id="fWPA" onchange="dirty()">
+            <option value="1" selected>1 week</option>
+            <option value="2">2 weeks</option>
+            <option value="4">4 weeks</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Groups (= kids)</label>
+          <select id="fGroups" onchange="syncGroupCount(); dirty()">
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Reference Monday</label>
+          <input type="date" id="fRefMon" oninput="dirty()">
+        </div>
+      </div>
+
+      <div style="margin-top:4px">
+        <div style="font-size:11px;font-weight:500;color:#666;margin-bottom:6px">Kids — one per group, in rotation order</div>
+        <div class="kids-row" id="kidsList"></div>
+        <div class="add-kid-row">
+          <input type="text" id="kidInput" placeholder="Name…" onkeydown="if(event.key==='Enter')addKid()">
+          <button class="btn btn-sm" onclick="addKid()">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Chores</div>
+      <table class="chore-table" id="choreTable">
+        <thead>
+          <tr>
+            <th style="width:22%">Name</th>
+            <th style="width:8%">Min</th>
+            <th style="width:8%">×/wk</th>
+            <th style="width:27%">Days</th>
+            <th style="width:27%">Instructions (optional)</th>
+            <th style="width:8%"></th>
+          </tr>
+        </thead>
+        <tbody id="choreBody"></tbody>
+      </table>
+      <div style="margin-top:10px">
+        <button class="btn btn-sm" onclick="addChore()">+ Add Chore</button>
+      </div>
+
+      <div class="generate-row">
+        <span class="status-msg" id="statusMsg"></span>
+        <button class="btn btn-primary" id="genBtn" onclick="generate()">Generate Charts →</button>
+      </div>
+    </div>
+
+  </div><!-- /setup -->
+
+  <!-- ── Output ── -->
+  <div id="output" style="display:none">
+
+    <div class="card fairness-card no-print">
+      <div class="card-title">Fairness Check</div>
+      <div class="fairness-note">
+        Each kid rotates through all groups equally — every <span id="cycleLen"></span> they've done each group once.
+        The closer the bars, the fairer the cycle.
+      </div>
+      <div class="fairness-wrap" id="fairnessBars"></div>
+      <div style="font-size:12px;font-weight:600;color:#555;margin-bottom:6px">This Cycle's Rotation</div>
+      <table class="rotation-table" id="rotTable"></table>
+    </div>
+
+    <div id="chartsWrap"></div>
+
+    <div class="back-row no-print">
+      <button class="btn" onclick="showSetup()">← Edit Chores</button>
+    </div>
+
+  </div><!-- /output -->
+
+</div><!-- /page -->
+
+<input type="file" id="fileInput" accept=".json" style="display:none" onchange="onFileImport(event)">
+
+<script>
+// ─── Balancer ────────────────────────────────────────────────────────────────
+
+const GL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+function wkMin(c) { return c.minutes * c.instances_per_week; }
+
+function balance(chores, n) {
+  if (!chores.length) throw new Error('no chores');
+  if (n < 2 || n > 26) throw new Error('groups must be 2–26');
+  const labels = GL.slice(0, n).split('');
+  const sorted = [...chores].sort((a, b) => wkMin(b) - wkMin(a));
+  const groups = {}, totals = {};
+  labels.forEach(l => { groups[l] = []; totals[l] = 0; });
+  for (const c of sorted) {
+    let lo = labels[0];
+    for (const l of labels) if (totals[l] < totals[lo]) lo = l;
+    groups[lo].push(c.id);
+    totals[lo] += wkMin(c);
+  }
+  return { groups, totals };
+}
+
+// ─── State ───────────────────────────────────────────────────────────────────
+
+const DAYS = ['mon','tue','wed','thu','fri','sat','sun'];
+const DL   = { mon:'M', tue:'T', wed:'W', thu:'Th', fri:'F', sat:'Sa', sun:'Su' };
+const DF   = { mon:'Mon', tue:'Tue', wed:'Wed', thu:'Thu', fri:'Fri', sat:'Sat', sun:'Sun' };
+
+let S = { family:'', weeks_per_assignment:1, num_groups:3, kids:[], reference_monday: thisMonday(), chores:[] };
+let uid = 1;
+
+function thisMonday() {
+  const d = new Date(); const day = d.getDay();
+  d.setDate(d.getDate() + (day === 0 ? -6 : 1 - day));
+  return d.toISOString().slice(0,10);
+}
+
+// ─── Render form ─────────────────────────────────────────────────────────────
+
+function renderForm() {
+  document.getElementById('fName').value    = S.family;
+  document.getElementById('fWPA').value     = S.weeks_per_assignment;
+  document.getElementById('fGroups').value  = S.num_groups;
+  document.getElementById('fRefMon').value  = S.reference_monday;
+  renderKids();
+  renderChores();
+}
+
+function renderKids() {
+  document.getElementById('kidsList').innerHTML = S.kids.map((k, i) =>
+    `<div class="kid-chip">${esc(k)}<button onclick="removeKid(${i})">×</button></div>`
+  ).join('');
+}
+
+function renderChores() {
+  document.getElementById('choreBody').innerHTML = S.chores.map(c => `
+    <tr id="cr-${c.id}">
+      <td><input type="text" value="${esc(c.name)}" onchange="upC(${c.id},'name',this.value)" placeholder="Chore name"></td>
+      <td><input type="number" value="${c.minutes}" min="1" max="180" onchange="upC(${c.id},'minutes',+this.value)"></td>
+      <td><input type="number" value="${c.instances_per_week}" min="1" max="14" onchange="upC(${c.id},'instances_per_week',+this.value)"></td>
+      <td>
+        <div class="days-cbs">
+          <div class="any-cb">
+            <input type="checkbox" ${c.as_needed?'checked':''} onchange="upC(${c.id},'as_needed',this.checked);toggleDays(${c.id})">
+            <span>Any</span>
+          </div>
+          ${DAYS.map(d=>`
+            <div class="day-cb" id="dc-${c.id}-${d}">
+              <input type="checkbox" ${c.days.includes(d)?'checked':''} ${c.as_needed?'disabled':''} onchange="upDays(${c.id})">
+              <span>${DL[d]}</span>
+            </div>`).join('')}
+        </div>
+      </td>
+      <td><textarea rows="2" onchange="upC(${c.id},'instructions',this.value)">${esc(c.instructions||'')}</textarea></td>
+      <td><button class="btn btn-sm btn-danger" onclick="delChore(${c.id})">✕</button></td>
+    </tr>
+  `).join('');
+}
+
+// ─── Form interactions ───────────────────────────────────────────────────────
+
+function addKid() {
+  const inp = document.getElementById('kidInput');
+  const n = inp.value.trim(); if (!n) return;
+  S.kids.push(n); inp.value = ''; renderKids(); dirty();
+}
+function removeKid(i) { S.kids.splice(i,1); renderKids(); dirty(); }
+
+function syncGroupCount() {
+  const n = +document.getElementById('fGroups').value;
+  S.num_groups = n;
+  while (S.kids.length < n) S.kids.push('Kid ' + (S.kids.length + 1));
+  renderKids(); dirty();
+}
+
+function addChore() {
+  const id = uid++;
+  S.chores.push({ id, name:'', minutes:10, instances_per_week:1, days:[], as_needed:false, instructions:'' });
+  renderChores();
+  const row = document.getElementById('cr-'+id);
+  if (row) row.querySelector('input[type="text"]').focus();
+  dirty();
+}
+function delChore(id) { S.chores = S.chores.filter(c => c.id !== id); renderChores(); dirty(); }
+
+function upC(id, field, val) { const c = S.chores.find(x=>x.id===id); if(c) c[field]=val; dirty(); }
+function upDays(id) {
+  const c = S.chores.find(x=>x.id===id); if(!c) return;
+  c.days = DAYS.filter(d => { const el=document.querySelector(`#dc-${id}-${d} input`); return el&&el.checked; });
+  dirty();
+}
+function toggleDays(id) {
+  const c = S.chores.find(x=>x.id===id); if(!c) return;
+  DAYS.forEach(d => { const el=document.querySelector(`#dc-${id}-${d} input`); if(el) el.disabled=c.as_needed; });
+  dirty();
+}
+
+function dirty() {
+  document.getElementById('genBtn').textContent = 'Generate Charts →';
+  document.getElementById('statusMsg').textContent = '';
+}
+
+// ─── Read form → state ───────────────────────────────────────────────────────
+
+function readForm() {
+  S.family               = document.getElementById('fName').value.trim();
+  S.weeks_per_assignment = +document.getElementById('fWPA').value;
+  S.num_groups           = +document.getElementById('fGroups').value;
+  S.reference_monday     = document.getElementById('fRefMon').value;
+}
+
+// ─── Generate ────────────────────────────────────────────────────────────────
+
+function generate() {
+  readForm();
+  const msg = document.getElementById('statusMsg');
+  msg.className = 'status-msg err';
+  if (!S.family)             { msg.textContent = 'Enter a family name.'; return; }
+  if (!S.kids.length)        { msg.textContent = 'Add at least one kid.'; return; }
+  if (S.kids.length !== S.num_groups) { msg.textContent = `Number of kids (${S.kids.length}) must equal groups (${S.num_groups}).`; return; }
+  if (!S.chores.length)      { msg.textContent = 'Add at least one chore.'; return; }
+  if (S.chores.some(c=>!c.name.trim())) { msg.textContent = 'All chores need a name.'; return; }
+
+  const { groups, totals } = balance(S.chores, S.num_groups);
+  S.groups = groups;
+  S.totals = totals;
+
+  renderFairness();
+  renderRotation();
+  renderCharts();
+
+  document.getElementById('setup').style.display  = 'none';
+  document.getElementById('output').style.display = '';
+  msg.className = 'status-msg';
+  msg.textContent = '';
+}
+
+function showSetup() {
+  document.getElementById('output').style.display = 'none';
+  document.getElementById('setup').style.display  = '';
+}
+
+// ─── Fairness bars ───────────────────────────────────────────────────────────
+
+function renderFairness() {
+  const totalWeeks = S.num_groups * S.weeks_per_assignment;
+  document.getElementById('cycleLen').textContent =
+    totalWeeks === 1 ? '1 week' : `${totalWeeks} weeks (${S.num_groups} groups × ${S.weeks_per_assignment} wk each)`;
+  const totals = S.totals;
+  const labels = Object.keys(totals);
+  const max = Math.max(...Object.values(totals));
+  document.getElementById('fairnessBars').innerHTML = labels.map(l => {
+    const v = totals[l];
+    const pct = max ? Math.round(v/max*100) : 0;
+    return `<div class="bar-row">
+      <div class="bar-label">Group ${l}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%">
+        <span class="bar-val">${v} min/wk</span>
+      </div></div>
+    </div>`;
+  }).join('');
+}
+
+// ─── Rotation table ──────────────────────────────────────────────────────────
+
+function weekOffset() {
+  const ref = new Date(S.reference_monday + 'T12:00:00');
+  const now = new Date(); now.setHours(12,0,0,0);
+  return Math.round((now - ref) / 604800000); // 7*24*60*60*1000
+}
+
+function currentRot() {
+  const w = weekOffset();
+  const wpa = S.weeks_per_assignment;
+  const total = S.num_groups * wpa;
+  const pos = ((w % total) + total) % total;
+  return Math.floor(pos / wpa);
+}
+
+function renderRotation() {
+  const labels = GL.slice(0, S.num_groups).split('');
+  const rot = currentRot();
+  const wpa = S.weeks_per_assignment;
+  const stepLabel = wpa === 1 ? 'Week' : `Weeks`;
+  let html = '<tr><th>' + stepLabel + '</th>' + S.kids.map(k=>`<th>${esc(k)}</th>`).join('') + '</tr>';
+  for (let step = 0; step < S.num_groups; step++) {
+    const cur = step === rot;
+    const start = step * wpa + 1;
+    const end   = start + wpa - 1;
+    const label = wpa === 1 ? `Week ${start}` : `Weeks ${start}–${end}`;
+    html += `<tr${cur?' class="now"':''}><td>${label}${cur?' ← now':''}</td>`;
+    html += S.kids.map((_,ki) => `<td>Group ${labels[(ki+step)%S.num_groups]}</td>`).join('');
+    html += '</tr>';
+  }
+  document.getElementById('rotTable').innerHTML = html;
+}
+
+// ─── Print charts ────────────────────────────────────────────────────────────
+
+function renderCharts() {
+  const labels = GL.slice(0, S.num_groups).split('');
+  const rot    = currentRot();
+  const offset = weekOffset();
+
+  // Date label — show range if weeks_per_assignment > 1
+  const wpa = S.weeks_per_assignment;
+  const assignmentStartOffset = Math.floor(offset / wpa) * wpa; // round down to step start
+  const ref = new Date(S.reference_monday + 'T12:00:00');
+  ref.setDate(ref.getDate() + assignmentStartOffset * 7);
+  const fmt = d => d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+  let dateStr;
+  if (wpa === 1) {
+    dateStr = ref.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+  } else {
+    const endDate = new Date(ref); endDate.setDate(endDate.getDate() + (wpa - 1) * 7 + 6);
+    dateStr = fmt(ref) + ' – ' + endDate.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+  }
+
+  document.getElementById('chartsWrap').innerHTML = labels.map(label => {
+    const ids    = S.groups[label] || [];
+    const chores = ids.map(id => S.chores.find(c=>c.id===id)).filter(Boolean);
+    const total  = S.totals[label];
+
+    // Which kid has this group this week
+    const li  = labels.indexOf(label);
+    const kid = S.kids[(li - rot + S.num_groups) % S.num_groups] || '—';
+
+    // Days columns: union of all days in this group's chores, in DAYS order
+    const groupDays = DAYS.filter(d => chores.some(c => c.days.includes(d)));
+    const hasAny    = chores.some(c => c.as_needed);
+
+    return `
+<div class="print-chart">
+  <div class="print-chart-header">
+    <h3>Group ${label}</h3>
+    <span class="meta">${esc(kid)} &nbsp;·&nbsp; Week of ${dateStr} &nbsp;·&nbsp; ~${total} min/week</span>
+  </div>
+  <table class="chore-rows">
+    <thead><tr>
+      <th class="name-th">Chore</th>
+      ${groupDays.map(d=>`<th>${DF[d]}</th>`).join('')}
+      ${hasAny ? '<th>As needed</th>' : ''}
+    </tr></thead>
+    <tbody>
+      ${chores.map(c=>`
+      <tr>
+        <td>
+          <div class="chore-title">${esc(c.name)}</div>
+          ${c.instructions ? `<div class="chore-inst">${esc(c.instructions)}</div>` : ''}
+          <div class="chore-dur">${c.minutes} min${c.instances_per_week>1?` × ${c.instances_per_week}/wk`:''}</div>
+        </td>
+        ${groupDays.map(d=>`
+          <td class="cb-cell">
+            ${c.days.includes(d) ? '<input type="checkbox">' : ''}
+          </td>`).join('')}
+        ${hasAny ? `<td class="cb-cell">
+          ${c.as_needed ? '<span class="as-needed-text">☐ when ready</span>' : ''}
+        </td>` : ''}
+      </tr>`).join('')}
+    </tbody>
+  </table>
+</div>`;
+  }).join('');
+}
+
+// ─── Import / Export / Share ─────────────────────────────────────────────────
+
+function triggerImport() { document.getElementById('fileInput').click(); }
+
+function onFileImport(ev) {
+  const f = ev.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = e => { try { loadSchema(JSON.parse(e.target.result)); } catch { alert('Invalid JSON.'); } };
+  r.readAsText(f);
+  ev.target.value = '';
+}
+
+function exportJSON() {
+  readForm();
+  const blob = new Blob([JSON.stringify(S, null, 2)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (S.family||'chores').replace(/\s+/g,'-').toLowerCase() + '-chores.json';
+  a.click();
+}
+
+function shareURL() {
+  readForm();
+  const enc = btoa(encodeURIComponent(JSON.stringify(S)));
+  const url = location.origin + location.pathname + '#c=' + enc;
+  const btn = document.getElementById('shareBtn');
+
+  if (enc.length > 1800) {
+    navigator.clipboard.writeText(JSON.stringify(S)).then(() => {
+      btn.textContent = 'JSON copied!';
+      setTimeout(() => btn.textContent = 'Share URL', 2500);
+    });
+    alert('Config is too large for a URL.\nJSON has been copied to clipboard — share it and use Import JSON.');
+    return;
+  }
+
+  navigator.clipboard.writeText(url).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Share URL', 2500);
+  });
+}
+
+function loadFromURL() {
+  const h = location.hash;
+  if (!h.startsWith('#c=')) return;
+  try { loadSchema(JSON.parse(decodeURIComponent(atob(h.slice(3))))); }
+  catch(e) { console.warn('URL config parse failed', e); }
+}
+
+function loadSchema(sc) {
+  S = {
+    family:               sc.family || '',
+    weeks_per_assignment: sc.weeks_per_assignment || 1,
+    num_groups:           sc.num_groups || 3,
+    kids:                 [...(sc.kids||[])],
+    reference_monday:     sc.reference_monday || thisMonday(),
+    chores:               (sc.chores||[]).map(c=>({...c})),
+    groups:               sc.groups || null,
+    totals:               sc.group_totals_minutes_per_week || null,
+  };
+  uid = Math.max(0, ...S.chores.map(c=>c.id||0)) + 1;
+  renderForm();
+  dirty();
+}
+
+// ─── Seed data ───────────────────────────────────────────────────────────────
+
+function loadSeed() {
+  // Try fetch first (works when served over HTTP); fall back to inline data.
+  fetch('chore_schema.json')
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .then(loadSchema)
+    .catch(() => loadSchema(SEED));
+}
+
+const SEED = {
+  family:'The Smiths', weeks_per_assignment:1, num_groups:3,
+  kids:['Alex','Jordan','Casey'],
+  reference_monday:'2026-01-05',
+  chores:[
+    {id:1, name:'Sweep kitchen floor',          minutes:10, instances_per_week:3, days:['mon','wed','sat'], as_needed:false, instructions:'Move chairs and step stools out of the way first. Done when no crumbs, dust, or debris remain and dustpan is emptied.'},
+    {id:2, name:'Wipe counters and stovetop',   minutes:8,  instances_per_week:3, days:['mon','wed','sat'], as_needed:false, instructions:'Wipe all kitchen counters and the stovetop. Remove items to wipe under them. Done when no crumbs, spills, or streaks remain.'},
+    {id:3, name:'Vacuum living room',           minutes:8,  instances_per_week:2, days:['wed','sat'],       as_needed:false, instructions:'Empty vacuum if full before starting. Vacuum all rugs and carpeted areas slowly. Empty vacuum when done.'},
+    {id:4, name:'Sweep living and dining room', minutes:10, instances_per_week:3, days:['mon','wed','sat'], as_needed:false, instructions:'Move chairs from table first. Sweep all hard floors in living and dining areas. Dustpan must be emptied.'},
+    {id:5, name:'Clean bathroom sink',          minutes:8,  instances_per_week:2, days:['wed','sat'],       as_needed:false, instructions:'Scrub sink and wipe countertop with sponge and spray. Done when no toothpaste, soap, or hair remains and faucet is clean.'},
+    {id:6, name:'Scrub toilet',                 minutes:10, instances_per_week:1, days:['sat'],             as_needed:false, instructions:'Use rubber gloves and disinfecting wipe. Clean seat and lid (top and bottom), rim, outside of bowl, and base.'},
+    {id:7, name:'Sweep and mop bathroom floor', minutes:8,  instances_per_week:2, days:['wed','sat'],       as_needed:false, instructions:'Sweep first, then mop. Move trash can and bath mat to clean under them. Done when floor is clean and dry.'},
+    {id:8, name:'Wipe dining table and chairs', minutes:5,  instances_per_week:2, days:['wed','sat'],       as_needed:false, instructions:'Clear the table first. Wipe entire surface and each chair. DO NOT wipe debris onto floor.'},
+    {id:9, name:'Wipe kitchen appliances',      minutes:8,  instances_per_week:2, days:['wed','sat'],       as_needed:false, instructions:'Clean outside of fridge, microwave, and dishwasher. Done when no smudges or food residue remain.'},
+    {id:10,name:'Tidy entryway',                minutes:10, instances_per_week:1, days:['fri'],             as_needed:false, instructions:'Shoes in their place, items that don\'t belong removed, floor swept or wiped.'},
+    {id:11,name:'Empty all trash cans',         minutes:5,  instances_per_week:1, days:['fri'],             as_needed:false, instructions:'Collect bags from all rooms, tie closed, take to outdoor bin. Replace bags in all indoor cans.'},
+    {id:12,name:'Dust shelves and surfaces',    minutes:10, instances_per_week:1, days:['sat'],             as_needed:false, instructions:'Dust all shelves, TV stand, windowsills, and flat surfaces in living areas.'},
+    {id:13,name:'Kitchen trash — bag and replace', minutes:3, instances_per_week:2, days:[], as_needed:true, instructions:'When nearly full: tie bag, take to outdoor bin, put fresh bag in can immediately.'},
+    {id:14,name:'Tidy common areas',            minutes:10, instances_per_week:1, days:['fri'],             as_needed:false, instructions:'Walk through all shared spaces. Return anything left out to its proper place.'},
+    {id:15,name:'Restock paper goods',          minutes:5,  instances_per_week:1, days:['fri'],             as_needed:false, instructions:'Check all bathrooms and kitchen for TP and paper towels. Restock from supply closet. Every bathroom needs at least 2 extra rolls.'},
+  ]
+};
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+
+renderForm();
+loadFromURL();
+</script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+{
+  "family": "The Smiths",
+  "weeks_per_assignment": 1,
+  "num_groups": 3,
+  "kids": [
+    "Alex",
+    "Jordan",
+    "Casey"
+  ],
+  "reference_monday": "2026-01-05",
+  "chores": [
+    {
+      "id": 1,
+      "name": "Sweep kitchen floor",
+      "minutes": 10,
+      "instances_per_week": 3,
+      "days": [
+        "mon",
+        "wed",
+        "sat"
+      ],
+      "as_needed": false,
+      "instructions": "Sweep the entire kitchen floor. Move chairs and step stools out of the way first. Done when there is no crumbs, dust, or debris on the floor and the dustpan is emptied into the trash."
+    },
+    {
+      "id": 2,
+      "name": "Wipe kitchen counters and stovetop",
+      "minutes": 8,
+      "instances_per_week": 3,
+      "days": [
+        "mon",
+        "wed",
+        "sat"
+      ],
+      "as_needed": false,
+      "instructions": "Use a damp cloth or sponge to wipe all kitchen counters and the stovetop. Remove items to wipe under them. Done when there are no crumbs, spills, or streaks on any counter surface."
+    },
+    {
+      "id": 3,
+      "name": "Vacuum living room",
+      "minutes": 8,
+      "instances_per_week": 2,
+      "days": [
+        "wed",
+        "sat"
+      ],
+      "as_needed": false,
+      "instructions": "Check that vacuum isn't full — empty first if needed. Vacuum all rugs and carpeted areas in the living room. Do not attempt to vacuum large objects. Empty the vacuum when done."
+    },
+    {
+      "id": 4,
+      "name": "Sweep living and dining room floors",
+      "minutes": 10,
+      "instances_per_week": 3,
+      "days": [
+        "mon",
+        "wed",
+        "sat"
+      ],
+      "as_needed": false,
+      "instructions": "Sweep all hard floor areas in the living and dining rooms. Move chairs away from the table first. Done when no debris remains on hard floors and dustpan is emptied."
+    },
+    {
+      "id": 5,
+      "name": "Clean bathroom sink and countertop",
+      "minutes": 8,
+      "instances_per_week": 2,
+      "days": [
+        "wed",
+        "sat"
+      ],
+      "as_needed": false,
+      "instructions": "Use a sponge and cleaning spray to scrub the bathroom sink and wipe the countertop. Done when there is no toothpaste, soap residue, or hair on the sink and counter, and the faucet is clean."
+    },
+    {
+      "id": 6,
+      "name": "Scrub toilet",
+      "minutes": 10,
+      "instances_per_week": 1,
+      "days": [
+        "sat"
+      ],
+      "as_needed": false,
+      "instructions": "Use rubber gloves and a disinfecting wipe or cleaner to wipe down the toilet: seat and lid (top and bottom), rim, outside of bowl, and base. Done when all surfaces are clean and free of debris and grime."
+    },
+    {
+      "id": 7,
+      "name": "Sweep and mop bathroom floor",
+      "minutes": 8,
+      "instances_per_week": 2,
+      "days": [
+        "wed",
+        "sat"
+      ],
+      "as_needed": false,
+      "instructions": "Sweep the bathroom floor first, then mop or wipe it down with a damp cloth. Move the trash can and bath mat to clean under them. Done when floor is clean and dry."
+    },
+    {
+      "id": 8,
+      "name": "Wipe dining table and chairs",
+      "minutes": 5,
+      "instances_per_week": 2,
+      "days": [
+        "wed",
+        "sat"
+      ],
+      "as_needed": false,
+      "instructions": "Clear the table of any items. Wipe the entire table surface and the back and seat of each chair. Done when all surfaces are clean and free of food, crumbs, or sticky spots. DO NOT wipe debris onto the floor."
+    },
+    {
+      "id": 9,
+      "name": "Wipe kitchen appliances",
+      "minutes": 8,
+      "instances_per_week": 2,
+      "days": [
+        "wed",
+        "sat"
+      ],
+      "as_needed": false,
+      "instructions": "Use a damp cloth or cleaning wipe to clean the outside of the fridge, microwave, and dishwasher. Done when there are no smudges, fingerprints, or food residue on any appliance surface."
+    },
+    {
+      "id": 10,
+      "name": "Tidy entryway",
+      "minutes": 10,
+      "instances_per_week": 1,
+      "days": [
+        "fri"
+      ],
+      "as_needed": false,
+      "instructions": "Put all shoes in their proper place. Remove any items that don't belong. Sweep or wipe the floor. Done when the entryway is clear, shoes are organized, and the floor is clean."
+    },
+    {
+      "id": 11,
+      "name": "Take out all trash cans",
+      "minutes": 5,
+      "instances_per_week": 1,
+      "days": [
+        "fri"
+      ],
+      "as_needed": false,
+      "instructions": "Collect trash bags from all rooms. Tie them closed and take them to the outdoor bin. Replace bags in all trash cans. Done when all indoor cans have fresh bags and outdoor bin is not overflowing."
+    },
+    {
+      "id": 12,
+      "name": "Dust shelves and surfaces",
+      "minutes": 10,
+      "instances_per_week": 1,
+      "days": [
+        "sat"
+      ],
+      "as_needed": false,
+      "instructions": "Use a duster or dry cloth to dust all shelves, TV stand, windowsills, and any other flat surfaces in the living areas. Done when visible dust is removed from all surfaces."
+    },
+    {
+      "id": 13,
+      "name": "Kitchen trash — empty and replace bag",
+      "minutes": 3,
+      "instances_per_week": 2,
+      "days": [],
+      "as_needed": true,
+      "instructions": "When the kitchen trash is full or nearly full, tie the bag closed and take it to the outdoor bin. Put a new bag in the can right away. Done when the outdoor bin has the old bag and the kitchen can has a fresh bag."
+    },
+    {
+      "id": 14,
+      "name": "Tidy common area and put things away",
+      "minutes": 10,
+      "instances_per_week": 1,
+      "days": [
+        "fri"
+      ],
+      "as_needed": false,
+      "instructions": "Walk through all shared spaces — living room, hallway, dining room. Pick up any items left out and return them to their proper place. Done when no personal items are left on floors or common surfaces."
+    },
+    {
+      "id": 15,
+      "name": "Restock paper goods",
+      "minutes": 5,
+      "instances_per_week": 1,
+      "days": [
+        "fri"
+      ],
+      "as_needed": false,
+      "instructions": "Check all bathrooms and the kitchen for paper towels and toilet paper. Restock any that are low from the supply closet. Done when every bathroom has at least 2 extra rolls and the kitchen has paper towels."
+    }
+  ],
+  "groups": {
+    "A": [
+      1,
+      5,
+      6,
+      10,
+      13
+    ],
+    "B": [
+      4,
+      7,
+      8,
+      12,
+      11
+    ],
+    "C": [
+      2,
+      3,
+      9,
+      14,
+      15
+    ]
+  },
+  "group_totals_minutes_per_week": {
+    "A": 72,
+    "B": 71,
+    "C": 71
+  }
+}
