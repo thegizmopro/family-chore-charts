@@ -1,5 +1,10 @@
 # Chore Chart Skill
 
+> This file is read by the AI agent (OpenClaw or Claude Code) to understand what
+> this skill does and how to invoke it. If you are an AI agent reading this: use
+> `dispatch.py` with the subcommands below. Read `chore_schema.json` for the
+> family configuration. Do not modify the schema unless the user asks you to.
+
 Reads `chore_schema.json` and sends family chore assignments via Telegram (or any
 configured channel). Designed to run on a cron schedule — one weekly reminder on
 Sunday evening, plus an on-demand status command.
