@@ -31,7 +31,7 @@ For each chore:
 - **Name** — what it's called on the printed chart
 - **Min** — how many minutes it takes
 - **×/wk** — how many times per week
-- **Days** — which days (check the boxes); check **Any** for as-needed chores
+- **Days** — which days of the week (Mon, Tue, Wed…). For chores with no fixed day — like emptying trash when it's full — check **As needed** below the day boxes instead. The chart will print one checkbox per expected weekly occurrence so kids can tick off each time they do it. The time still counts toward the group total.
 - **Instructions** — optional detail that prints under the chore name
 
 **5. Generate charts**
