@@ -183,6 +183,35 @@
     .back-row { text-align: center; margin-top: 8px; padding-bottom: 8px; }
 
     /* ── Print ── */
+    @media (max-width: 640px) {
+      header { flex-wrap: wrap; gap: 6px; padding: 8px 12px; }
+      header h1 { flex-basis: 100%; }
+      .btn-sm { padding: 5px 10px; font-size: 12px; }
+      .page { padding: 12px 10px; }
+      .card { padding: 14px 12px; }
+
+      /* Chore form table — horizontal scroll rather than breaking layout */
+      #choreTable { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+      /* Family setup fields — stack vertically */
+      .field-row { flex-direction: column; gap: 8px; }
+      .field input, .field select { width: 100%; }
+
+      /* Kids row wraps fine already; shrink add-input */
+      .add-kid-row input { width: 130px; }
+
+      /* Output charts — full width, smaller header text */
+      .print-chart-header h3 { font-size: 15px; }
+      .print-chart-header .meta { font-size: 11px; }
+      .chore-rows td, .chore-rows th { padding: 6px 6px; }
+
+      /* Fairness bars readable on narrow screens */
+      .bar-label { width: 44px; font-size: 12px; }
+
+      /* Rotation table — horizontal scroll */
+      .rotation-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    }
+
     @media print {
       header, #setup, .no-print { display: none !important; }
       #output { display: block !important; }
