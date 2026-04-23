@@ -564,7 +564,7 @@ function renderCharts() {
     <thead><tr>
       <th class="name-th">Chore</th>
       ${groupDays.map(d=>`<th>${DF[d]}</th>`).join('')}
-      ${hasAny ? '<th>As needed</th>' : ''}
+      ${hasAny ? `<th>As needed<br><span style="font-weight:400;font-style:italic;font-size:10px">check each time done</span></th>` : ''}
     </tr></thead>
     <tbody>
       ${chores.map(c=>`
@@ -579,7 +579,9 @@ function renderCharts() {
             ${c.days.includes(d) ? '<input type="checkbox">' : ''}
           </td>`).join('')}
         ${hasAny ? `<td class="cb-cell">
-          ${c.as_needed ? '<span class="as-needed-text">☐ when ready</span>' : ''}
+          ${c.as_needed
+            ? Array.from({length: c.instances_per_week}, () => '<input type="checkbox">').join(' ')
+            : ''}
         </td>` : ''}
       </tr>`).join('')}
     </tbody>
